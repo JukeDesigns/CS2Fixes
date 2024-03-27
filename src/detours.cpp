@@ -540,7 +540,7 @@ void TracePlayerBBox_Custom(const Vector &start, const Vector &end, const bbox_t
 				{
 					pm.fraction = VectorLength(test.endpos - start) / totalDistance;
 					pm.endpos = test.endpos;
-					// pm.planeNormal = test.planeNormal;
+					pm.planeNormal = test.planeNormal;
 				}
 			}
 			else
@@ -1037,31 +1037,31 @@ void TryPlayerMove_Custom(CCSPlayer_MovementServices *ms, CMoveData *mv, Vector 
 						pm.startpos = startPos;
 						break;
 					}
-					//// We did hit something, but what if we move the original origin just a tiny bit away from the normal of whatever we just collided?
-					//else if (!CloseEnough(pm2.fraction, 0.0f, 0.1f))
-					//{
-					//	Vector newStartPos = mv->m_vecAbsOrigin + pm2.planeNormal * 0.0625f;
-					//	end += pm2.planeNormal * 0.0625f;
-					//	utils::TracePlayerBBox(newStartPos, end, bounds, &filter, pm2);
-					//	utils::DebugLine(pm2.endpos, pm2.endpos + 8 * pm.planeNormal, 0, 0, 255, true, 10.0f);
-					//	utils::DebugCross3D(pm2.endpos, 5, 255, 0, 0, true, 3.0f);
-					//	if (player->m_hGroundEntity() == nullptr && !IsValidMovementTrace(pm2, bounds, &filter))
-					//	{
-					//		has_valid_plane = false;
-					//		stuck_on_ramp = true;
-					//		continue;
-					//	}
-					//	if (IsValidMovementTrace(pm2, bounds, &filter) && (pm2.planeNormal != pm.planeNormal || CloseEnough(pm2.fraction, 1.0f, FLT_EPSILON)))
-					//	{
-					//		Vector startPos = pm.startpos;
-					//		pm = pm2;
-					//		pm.startpos = startPos;
-					//		if (CloseEnough(pm2.fraction, 1.0f, FLT_EPSILON))
-					//		{
-					//			break;
-					//		}
-					//	}
-					//}
+					// We did hit something, but what if we move the original origin just a tiny bit away from the normal of whatever we just collided?
+					else if (!CloseEnough(pm2.fraction, 0.0f, 0.1f))
+					{
+						Vector newStartPos = mv->m_vecAbsOrigin + pm2.planeNormal * 0.0625f;
+						end += pm2.planeNormal * 0.0625f;
+						utils::TracePlayerBBox(newStartPos, end, bounds, &filter, pm2);
+						utils::DebugLine(pm2.endpos, pm2.endpos + 8 * pm.planeNormal, 0, 0, 255, true, 10.0f);
+						utils::DebugCross3D(pm2.endpos, 5, 255, 0, 0, true, 3.0f);
+						if (player->m_hGroundEntity() == nullptr && !IsValidMovementTrace(pm2, bounds, &filter))
+						{
+							has_valid_plane = false;
+							stuck_on_ramp = true;
+							continue;
+						}
+						if (IsValidMovementTrace(pm2, bounds, &filter) && (pm2.planeNormal != pm.planeNormal || CloseEnough(pm2.fraction, 1.0f, FLT_EPSILON)))
+						{
+							Vector startPos = pm.startpos;
+							pm = pm2;
+							pm.startpos = startPos;
+							if (CloseEnough(pm2.fraction, 1.0f, FLT_EPSILON))
+							{
+								break;
+							}
+						}
+					}
 				}
 #if 0
 				if (player->m_MoveType() == MOVETYPE_WALK &&
